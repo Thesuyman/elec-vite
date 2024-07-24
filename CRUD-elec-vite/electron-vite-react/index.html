@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>CRUD</title>
+</head>
+<body>
+  <h1>CRUD</h1>
+  <div>
+    <input id="username" type="text" placeholder="Username">
+    <input id="password" type="password" placeholder="Password">
+    <input id="email" type="text" placeholder="Email">
+    <button onclick="createUser()">Create User</button>
+  </div>
+  <div id="users"></div>
+
+  <script>
+    async function createUser() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      const email = document.getElementById('email').value;
+      await window.electronAPI.createUser({ username, password, email });
+      loadUsers();
+      
+
+    }
+
+    async function loadUsers() {
+      const users = await window.electronAPI.getUsers();
+      const usersDiv = document.getElementById('users');
+      usersDiv.innerHTML = '';
+      users.forEach(user => {
+        usersDiv.innerHTML += `<div>${user.id} - ${user.username} - ${user.email} <button onclick="deleteUser(${user.id})"> Delete </button></div>`;
+      });
+      <button onclick="getUsers()">getUsers</button>
+    }
+
+    async function deleteUser(id) {
+      await window.electronAPI.deleteUser(id);
+      loadUsers();
+      <button onclick="deleteUser()">Delete</button>
+    }
+
+    document.addEventListener('DOMContentLoaded', loadUsers);
+  </script>
+</body>
+</html>
